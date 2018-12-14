@@ -13,6 +13,6 @@ setup(name='Gecko',
         'hdbscan>=0.8.18',
         'networkx==1.11',
         'cython>=0.28.5'],
-    dependency_links=["git+https://github.com/palash1992/GEM"],
+    dependency_links=["git+https://github.com/palash1992/GEM@c5bce1a662e7b962abc8f9db5de753e7b0d13c4e#egg=gem"],
     include_package_data=True,
 )
