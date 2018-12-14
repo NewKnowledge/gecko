@@ -1,6 +1,6 @@
 # The following may be needed on some (potentially noninteractive) environments
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 import os
 os.environ["THEANO_FLAGS"]="mode=FAST_RUN,device=gpu,floatX=float32"
 import networkx as nx
