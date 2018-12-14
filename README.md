@@ -10,7 +10,7 @@ Perform the following two commands:
 
 ```bash
 pip3.6 install -r requirements.txt
-pip3.6 install git+https://NewKnowledge/gecko
+pip3.6 install git+https://github.com/NewKnowledge/gecko
 ```
 Alternatively, if the code is cloned locally, the second line can change to:
 
