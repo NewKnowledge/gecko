@@ -1,5 +1,5 @@
 import matplotlib
-# matplotlib.use('TkAgg')
+matplotlib.use('Agg')
 
 import os
 os.environ["THEANO_FLAGS"]="mode=FAST_RUN,device=gpu,floatX=float32"

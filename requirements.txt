@@ -1,2 +1,2 @@
 git+https://github.com/palash1992/GEM@c5bce1a662e7b962abc8f9db5de753e7b0d13c4e#egg=gem
-#cython>=0.28.5
+#cython>=0.28.5 # this has been needed in the past, doesn't seem to be needed now
