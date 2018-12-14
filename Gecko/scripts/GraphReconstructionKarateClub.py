@@ -20,7 +20,7 @@ from gem.embedding.lle      import LocallyLinearEmbedding
 
 # File that contains the edges. Format: source target
 # Optionally, you can add weights as third column: source target weight
-edge_f = 'karate.edgelist'
+edge_f = 'data/karate.edgelist'
 # Specify whether the edges are directed
 isDirected = True
 
