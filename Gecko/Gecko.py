@@ -109,7 +109,7 @@ class Gecko:
             plt.savefig("community_detection_louvain_"+embedding._method_name) # saving figure with 'Agg' matplotlib backend
 
         return partition
-        
+
 if __name__=='__main__':
     # if you are using in pip script form, you will need these imports
     # from Gecko import Gecko
@@ -132,3 +132,5 @@ if __name__=='__main__':
     # Community Detection/ Node Clustering using Graph Embeddings
     communities = embedding_generator.CommunityDetection(G=G,embedding=bestEmbedding,visualize=True)
 
+    # Community Detection/ Node Clustering using Louvain alternative
+    communities = embedding_generator.CommunityDetection(G=G,embedding=bestEmbedding,visualize=True)
