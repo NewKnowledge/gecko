@@ -19,6 +19,8 @@ from gem.embedding.lle import LocallyLinearEmbedding
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
 
+import community
+
 class Gecko:
     def __init__(self):
         # Initialize set of possible models
@@ -86,6 +88,28 @@ class Gecko:
             plt.savefig("community_detection_"+embedding._method_name) # saving figure with 'Agg' matplotlib backend
 
         return kmeans
+
+    def CommunityDetectionLouvain(self,G,visualize=True):
+        # Get best partition
+        partition = community.best_partition(G)
+        print('Modularity: ', community.modularity(partition, G))
+
+        # Draw graph
+        if(visualize):
+            size = float(len(set(partition.values())))
+            pos = nx.spring_layout(G)
+            count = 0
+            for com in set(partition.values()) :
+                count = count + 1
+                list_nodes = [nodes for nodes in partition.keys() if partition[nodes] == com]
+                nx.draw_networkx_nodes(G, pos, list_nodes, node_size = 20, node_color = str(count / size))
+            nx.draw_networkx_edges(G, pos, alpha=0.5)
+            plt.axis('off')
+            plt.show() # one can display using 'TkAgg' matplotlib backend
+            plt.savefig("community_detection_louvain_"+embedding._method_name) # saving figure with 'Agg' matplotlib backend
+
+        return partition
+        
 if __name__=='__main__':
     # if you are using in pip script form, you will need these imports
     # from Gecko import Gecko
@@ -95,7 +119,7 @@ if __name__=='__main__':
     # File that contains the edges. Format: source target
     edge_f = 'scripts/data/karate.edgelist'
     # Specify whether the edges are directed
-    isDirected = True
+    isDirected = False # crucial for performance
     # Load graph
     G = graph_util.loadGraphFromEdgeListTxt(edge_f, directed=isDirected)
     G = G.to_directed()
@@ -106,5 +130,5 @@ if __name__=='__main__':
     # advance users can also define their own embeddings directly, as done in the __init__ method above
 
     # Community Detection/ Node Clustering using Graph Embeddings
-    communities = embedding_generator.CommunityDetection(G=G,embedding=bestEmbedding)
+    communities = embedding_generator.CommunityDetection(G=G,embedding=bestEmbedding,visualize=True)
 
