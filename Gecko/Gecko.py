@@ -106,7 +106,7 @@ class Gecko:
             nx.draw_networkx_edges(G, pos, alpha=0.5)
             plt.axis('off')
             plt.show() # one can display using 'TkAgg' matplotlib backend
-            plt.savefig("community_detection_louvain_"+embedding._method_name) # saving figure with 'Agg' matplotlib backend
+            plt.savefig("community_detection_louvain") # saving figure with 'Agg' matplotlib backend
 
         return partition
 
@@ -121,8 +121,8 @@ if __name__=='__main__':
     # Specify whether the edges are directed
     isDirected = False # crucial for performance
     # Load graph
-    G = graph_util.loadGraphFromEdgeListTxt(edge_f, directed=isDirected)
-    G = G.to_directed()
+    G_original = graph_util.loadGraphFromEdgeListTxt(edge_f, directed=isDirected)
+    G = G_original.to_directed()
     embedding_generator = Gecko()
     bestEmbedding = embedding_generator.GraphReconstruction(G=G,visualize=False)
     print("DEBUG::The best embedding found is")
@@ -133,4 +133,4 @@ if __name__=='__main__':
     communities = embedding_generator.CommunityDetection(G=G,embedding=bestEmbedding,visualize=True)
 
     # Community Detection/ Node Clustering using Louvain alternative
-    communities = embedding_generator.CommunityDetection(G=G,embedding=bestEmbedding,visualize=True)
+    communities = embedding_generator.CommunityDetectionLouvain(G=G_original,visualize=True)
