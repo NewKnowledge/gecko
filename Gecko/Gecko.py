@@ -1,11 +1,12 @@
 # The following may be needed on some (potentially noninteractive) environments
-import matplotlib
+# import matplotlib
 # matplotlib.use('Agg')
 import os
 os.environ["THEANO_FLAGS"]="mode=FAST_RUN,device=gpu,floatX=float32"
 import networkx as nx
 from time import time
 import matplotlib.pyplot as plt
+import numpy as np
 
 from gem.utils import graph_util, plot_util
 from gem.evaluation import visualize_embedding as viz
@@ -85,28 +86,22 @@ class Gecko:
             nx.draw_networkx(G,pos,node_color=kmeans.labels_,node_size=300,alpha=0.5,arrows=False,font_size=12)
             plt.title('Community Detection using Graph Embedding '+embedding._method_name)
             plt.show() # one can display using 'TkAgg' matplotlib backend
-            plt.savefig("community_detection_"+embedding._method_name) # saving figure with 'Agg' matplotlib backend
+            #plt.savefig("community_detection_"+embedding._method_name) # saving figure with 'Agg' matplotlib backend
 
         return kmeans
 
     def CommunityDetectionLouvain(self,G,visualize=True):
         # Get best partition
         partition = community.best_partition(G)
-        print('Modularity: ', community.modularity(partition, G))
-
+        # print('Modularity: ', community.modularity(partition, G))
         # Draw graph
         if(visualize):
-            size = float(len(set(partition.values())))
             pos = nx.spring_layout(G)
-            count = 0
-            for com in set(partition.values()) :
-                count = count + 1
-                list_nodes = [nodes for nodes in partition.keys() if partition[nodes] == com]
-                nx.draw_networkx_nodes(G, pos, list_nodes, node_size = 20, node_color = str(count / size))
-            nx.draw_networkx_edges(G, pos, alpha=0.5)
-            plt.axis('off')
+            nx.draw_networkx(G, pos,node_color=np.array(list(partition.values())).astype(float), node_size=300,alpha=0.5,arows=False,font_size=12)
+            plt.title('Community Detection using Louvain Methods ')
+            # plt.axis('off')
             plt.show() # one can display using 'TkAgg' matplotlib backend
-            plt.savefig("community_detection_louvain") # saving figure with 'Agg' matplotlib backend
+            #plt.savefig("community_detection_louvain") # saving figure with 'Agg' matplotlib backend
 
         return partition
 
@@ -131,6 +126,10 @@ if __name__=='__main__':
 
     # Community Detection/ Node Clustering using Graph Embeddings
     communities = embedding_generator.CommunityDetection(G=G,embedding=bestEmbedding,visualize=True)
+    print("DEBUG::The labels from GE-based community detection are:")
+    print(communities.labels_)
 
     # Community Detection/ Node Clustering using Louvain alternative
     communities = embedding_generator.CommunityDetectionLouvain(G=G_original,visualize=True)
+    print("DEBUG::The labels from Louvain community detection are:")
+    print(list(communities.values()))
