@@ -1,6 +1,6 @@
 # The following may be needed on some (potentially noninteractive) environments
 import matplotlib
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 import os
 os.environ["THEANO_FLAGS"]="mode=FAST_RUN,device=gpu,floatX=float32"
 import networkx as nx
@@ -60,7 +60,7 @@ class Gecko:
             # Visualize
             if(visualize):
                 viz.plot_embedding2D(embedding.get_embedding(), di_graph=G, node_colors=None)
-                # plt.show() # one can display using 'TkAgg' matplotlib backend
+                plt.show() # one can display using 'TkAgg' matplotlib backend
                 plt.savefig("embedding_"+embedding._method_name) # saving figure with 'Agg' matplotlib backend
 
             # keep track of the best embedding so far

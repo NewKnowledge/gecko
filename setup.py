@@ -12,6 +12,6 @@ setup(name='Gecko',
         'networkx==1.11',
         'cython>=0.28.5',
         'python-louvain==0.11'],
-    dependency_links=["git+https://github.com/palash1992/GEM@c5bce1a662e7b962abc8f9db5de753e7b0d13c4e#egg=gem"],
+    dependency_links=["git+https://github.com/palash1992/GEM"],
     include_package_data=True,
 )
