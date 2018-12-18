@@ -29,7 +29,8 @@ class Gecko:
         # Goyal and Ferrera (2017) for a taxonomy of graph embedding methods
         models = []
         # Presently all methods are "factorization based methods"
-        models.append(GraphFactorization(d=2, max_iter=100000, eta=1*10**-4, regu=1.0))
+        # first method very expensive, unless C++ version installed
+        # models.append(GraphFactorization(d=2, max_iter=100000, eta=1*10**-4, regu=1.0))
         models.append(HOPE(d=4, beta=0.01))
         models.append(LaplacianEigenmaps(d=2))
         models.append(LocallyLinearEmbedding(d=2))
@@ -98,7 +99,7 @@ class Gecko:
         if(visualize):
             pos = nx.spring_layout(G)
             nx.draw_networkx(G, pos,node_color=np.array(list(partition.values())).astype(float), node_size=300,alpha=0.5,arows=False,font_size=12)
-            plt.title('Community Detection using Louvain Methods ')
+            plt.title('Community Detection using Louvain Method')
             # plt.axis('off')
             plt.show() # one can display using 'TkAgg' matplotlib backend
             #plt.savefig("community_detection_louvain") # saving figure with 'Agg' matplotlib backend
