@@ -23,27 +23,34 @@ from sklearn.manifold import TSNE
 import community
 
 class Gecko:
-    def __init__(self):
+    def __init__(self,dim=4,models=[]):
         # Initialize set of possible models
         # see "Graph Embedding Techniques, Applications, and Performance: A Survey" by 
         # Goyal and Ferrera (2017) for a taxonomy of graph embedding methods
-        models = []
-        # Presently all methods are "factorization based methods"
-        # first method very expensive, unless C++ version installed
-        # models.append(GraphFactorization(d=2, max_iter=100000, eta=1*10**-4, regu=1.0))
-        models.append(HOPE(d=4, beta=0.01))
-        models.append(LaplacianEigenmaps(d=2))
-        models.append(LocallyLinearEmbedding(d=2))
-        # The following "random walk based" and "deep learning based" methods will be enabled in the future
-        # models.append(node2vec(d=2, max_iter=1, walk_len=80, num_walks=10, con_size=10, ret_p=1, inout_p=1))
-        # models.append(SDNE(d=2, beta=5, alpha=1e-5, nu1=1e-6, nu2=1e-6, K=3,n_units=[50, 15,], rho=0.3, n_iter=50, xeta=0.01,n_batch=500,
-        #                modelfile=['./intermediate/enc_model.json', './intermediate/dec_model.json'],
-        #                weightfile=['./intermediate/enc_weights.hdf5', './intermediate/dec_weights.hdf5']))
+        
+        if not models: # if no models specified, create some default ones
+            # Presently all methods are "factorization based methods"
+            # first method very expensive, unless C++ version installed
+            # models.append(GraphFactorization(d=2, max_iter=100000, eta=1*10**-4, regu=1.0))
+            models.append(HOPE(d=dim, beta=0.01))
+            models.append(LaplacianEigenmaps(d=dim))
+            models.append(LocallyLinearEmbedding(d=dim))
+            # The following "random walk based" and "deep learning based" methods will be enabled in the future
+            # models.append(node2vec(d=2, max_iter=1, walk_len=80, num_walks=10, con_size=10, ret_p=1, inout_p=1))
+            # models.append(SDNE(d=2, beta=5, alpha=1e-5, nu1=1e-6, nu2=1e-6, K=3,n_units=[50, 15,], rho=0.3, n_iter=50, xeta=0.01,n_batch=500,
+            #                modelfile=['./intermediate/enc_model.json', './intermediate/dec_model.json'],
+            #                weightfile=['./intermediate/enc_weights.hdf5', './intermediate/dec_weights.hdf5']))
         self.models = models
     
     # Convert to graph embedding, then reconstruct nodes, to measure suitability of particular method
     # on similar graphs. Return most "suitable" model
-    def GraphReconstruction(self,G,verbose=True,visualize=True):
+    def GraphReconstruction(self,G,verbose=True,visualize=True,directed=False):
+        # convert to directed form for base library gem, if needed
+        if(not directed):
+            G = G.to_directed()
+        # important that nodes are contiguously numbered
+        G = nx.convert_node_labels_to_integers(G,first_label=0,ordering='default',label_attribute="original_label")
+        # now find best performing embedding
         maxMAP=0
         for embedding in self.models:
             if(verbose):
@@ -91,14 +98,14 @@ class Gecko:
 
         return kmeans
 
-    def CommunityDetectionLouvain(self,G,visualize=True):
+    def CommunityDetectionLouvain(self,G,visualize=True): # input Graph **must be undirected
         # Get best partition
         partition = community.best_partition(G)
         # print('Modularity: ', community.modularity(partition, G))
         # Draw graph
         if(visualize):
             pos = nx.spring_layout(G)
-            nx.draw_networkx(G, pos,node_color=np.array(list(partition.values())).astype(float), node_size=300,alpha=0.5,arows=False,font_size=12)
+            nx.draw_networkx(G, pos,node_color=np.array(list(partition.values())).astype(float), node_size=300,alpha=0.5,arrows=False,font_size=12)
             plt.title('Community Detection using Louvain Method')
             plt.axis('off')
             plt.show() # one can display using 'TkAgg' matplotlib backend
@@ -117,20 +124,19 @@ if __name__=='__main__':
     # Specify whether the edges are directed
     isDirected = False # crucial for performance
     # Load graph
-    G_original = graph_util.loadGraphFromEdgeListTxt(edge_f, directed=isDirected)
-    G = G_original.to_directed()
+    G = graph_util.loadGraphFromEdgeListTxt(edge_f, directed=isDirected)
     embedding_generator = Gecko()
-    bestEmbedding = embedding_generator.GraphReconstruction(G=G,visualize=False)
+    bestEmbedding = embedding_generator.GraphReconstruction(G=G,visualize=False,directed=isDirected)
     print("DEBUG::The best embedding found is")
     print(bestEmbedding)
     # advance users can also define their own embeddings directly, as done in the __init__ method above
 
     # Community Detection/ Node Clustering using Graph Embeddings
-    communities = embedding_generator.CommunityDetection(G=G,embedding=bestEmbedding,visualize=True)
+    communities = embedding_generator.CommunityDetection(G=G,embedding=bestEmbedding,n_clusters=2,visualize=True)
     print("DEBUG::The labels from GE-based community detection are:")
     print(communities.labels_)
 
-    # Community Detection/ Node Clustering using Louvain alternative
-    communities = embedding_generator.CommunityDetectionLouvain(G=G_original,visualize=True)
+    # Community Detection/ Node Clustering using Louvain alternative -- input **must be undirected
+    communities = embedding_generator.CommunityDetectionLouvain(G=G,visualize=True)
     print("DEBUG::The labels from Louvain community detection are:")
     print(list(communities.values()))
