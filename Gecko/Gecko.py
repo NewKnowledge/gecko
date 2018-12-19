@@ -100,7 +100,7 @@ class Gecko:
             pos = nx.spring_layout(G)
             nx.draw_networkx(G, pos,node_color=np.array(list(partition.values())).astype(float), node_size=300,alpha=0.5,arows=False,font_size=12)
             plt.title('Community Detection using Louvain Method')
-            # plt.axis('off')
+            plt.axis('off')
             plt.show() # one can display using 'TkAgg' matplotlib backend
             #plt.savefig("community_detection_louvain") # saving figure with 'Agg' matplotlib backend
 

@@ -106,4 +106,4 @@ venv.bak/
 # custom
 *.png
 Gecko/*.png
-Scripts/data/nips-authors
+Scripts/data

@@ -6,14 +6,14 @@ import networkx as nx
 # GRAPH RECONSTRUCTION
 # File that contains the edges. Format: source target
 # edge_f = 'data/karate.edgelist'
+# edge_f = 'data/BUP_train_0.net'
 
 # *.gml inputs can be processed as follows
-# graphpath = "data/6_70_com_amazon.gml"
-# graph = nx.read_gml(graphpath)
-edge_f = 'data/6_70_com_amazon.edgelist'
-# nx.write_edgelist(graph,edge_f,data=False)
+graphpath = "data/LL1_bn_fly_drosophila_medulla_net.gml"
+graph = nx.read_gml(graphpath)
+edge_f = 'data/LL1_bn_fly_drosophila_medulla_net.edgelist'
+nx.write_edgelist(graph,edge_f,data=False)
 
-# edge_f = 'data/BUP_train_0.net'
 
 # Specify whether the edges are directed
 isDirected = False # crucial for performance
