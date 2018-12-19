@@ -19,5 +19,16 @@ pip3.6 install .
 ```
 
 ## Examples
-See the bottom of `Gecko.py` for example code that serves as demonstration of capabilities. More detailed instructions forthcoming.
+See the bottom of `Gecko.py` for example code that serves as demonstration of capabilities. Indeed one can do
+
+```bash
+python3.6 Gecko.py
+```
+
+without pip installing to immediately test on the simplest example (Zachary's Karate Club). 
+
+In the `/scripts` subfolder checkout sample code for library when used in pip installable form, in CommunityDetection.py.
+
+
+More detailed instructions forthcoming.
 
