@@ -1,6 +1,7 @@
 # The following may be needed on some (potentially noninteractive) environments
 # import matplotlib
 # matplotlib.use('Agg')
+
 import os
 os.environ["THEANO_FLAGS"]="mode=FAST_RUN,device=gpu,floatX=float32"
 import networkx as nx
@@ -114,10 +115,6 @@ class Gecko:
         return partition
 
 if __name__=='__main__':
-    # if you are using in pip script form, you will need these imports
-    # from Gecko import Gecko
-    # from gem.utils import graph_util
-
     # GRAPH RECONSTRUCTION
     # File that contains the edges. Format: source target
     edge_f = 'scripts/data/karate.edgelist'
@@ -126,10 +123,11 @@ if __name__=='__main__':
     # Load graph
     G = graph_util.loadGraphFromEdgeListTxt(edge_f, directed=isDirected)
     embedding_generator = Gecko()
+    # advanced users can also define their own preferred embeddings directly, as follows
+    # embedding_generator = Gecko(models=[HOPE(d=4, beta=0.01)])
     bestEmbedding = embedding_generator.GraphReconstruction(G=G,visualize=False,directed=isDirected)
     print("DEBUG::The best embedding found is")
     print(bestEmbedding)
-    # advance users can also define their own embeddings directly, as done in the __init__ method above
 
     # Community Detection/ Node Clustering using Graph Embeddings
     communities = embedding_generator.CommunityDetection(G=G,embedding=bestEmbedding,n_clusters=2,visualize=True)
